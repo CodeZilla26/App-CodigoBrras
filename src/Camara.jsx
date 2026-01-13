@@ -56,16 +56,7 @@ export default function Camara() {
   }
 
   const fetchDatosPorPlaca = async (placaValue) => {
-    const endpoint =
-      import.meta.env.VITE_API_ENDPOINT ?? 
-      (import.meta.env.DEV
-        ? 'https://autohub.madrisqui.com/servicios/tramite/placa/recojo'
-        : undefined)
-
-    if (!endpoint) {
-      setApiError('Falta configurar VITE_API_ENDPOINT (URL del endpoint)')
-      return
-    }
+    const endpoint = 'https://autohub.madrisqui.com/servicios/tramite/placa/recojo'
 
     if (apiAbortRef.current) {
       apiAbortRef.current.abort()
