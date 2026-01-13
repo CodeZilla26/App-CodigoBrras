@@ -6,10 +6,15 @@ export default function Camara() {
   const videoRef = useRef(null)
   const scannerRef = useRef(null)
   const scannerControlsRef = useRef(null)
+  const apiAbortRef = useRef(null)
 
   const [cameraActive, setCameraActive] = useState(false)
   const [error, setError] = useState('')
-  const [result, setResult] = useState('')
+  const [placa, setPlaca] = useState('')
+  const [direccion, setDireccion] = useState('')
+  const [empresa, setEmpresa] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [apiError, setApiError] = useState('')
 
   useEffect(() => {
     return () => {
@@ -18,6 +23,11 @@ export default function Camara() {
         scannerControlsRef.current = null
       }
       if (videoRef.current) videoRef.current.srcObject = null
+
+      if (apiAbortRef.current) {
+        apiAbortRef.current.abort()
+        apiAbortRef.current = null
+      }
     }
   }, [])
 
@@ -31,9 +41,80 @@ export default function Camara() {
     setCameraActive(false)
   }
 
+  const clearResults = () => {
+    setError('')
+    setApiError('')
+    setPlaca('')
+    setDireccion('')
+    setEmpresa('')
+    setLoading(false)
+
+    if (apiAbortRef.current) {
+      apiAbortRef.current.abort()
+      apiAbortRef.current = null
+    }
+  }
+
+  const fetchDatosPorPlaca = async (placaValue) => {
+    const endpoint =
+      import.meta.env.VITE_API_ENDPOINT ?? 
+      (import.meta.env.DEV
+        ? 'https://autohub.madrisqui.com/servicios/tramite/placa/recojo'
+        : undefined)
+
+    if (!endpoint) {
+      setApiError('Falta configurar VITE_API_ENDPOINT (URL del endpoint)')
+      return
+    }
+
+    if (apiAbortRef.current) {
+      apiAbortRef.current.abort()
+    }
+
+    const controller = new AbortController()
+    apiAbortRef.current = controller
+
+    setLoading(true)
+    setApiError('')
+
+    try {
+      const resp = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ placa: placaValue }),
+        signal: controller.signal,
+      })
+
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status}`)
+      }
+
+      const json = await resp.json()
+      setDireccion(json?.data?.direccion ?? '')
+      setEmpresa(json?.data?.empresa ?? '')
+    
+    } catch (e) {
+      if (e?.name === 'AbortError') return
+      const msg = e?.message ? String(e.message) : 'Error consultando API'
+      setApiError(msg)
+    } finally {
+      setLoading(false)
+      apiAbortRef.current = null
+    }
+  }
+
+  const onNuevo = async () => {
+    stopCamera()
+    clearResults()
+    await startCamera()
+  }
+
   const startCamera = async () => {
     try {
       setError('')
+      setApiError('')
 
       const hasGetUserMedia =
         typeof navigator !== 'undefined' &&
@@ -72,9 +153,9 @@ export default function Camara() {
       const controls = await scannerRef.current.decodeFromConstraints(constraints, videoRef.current, (res, err) => {
         if (res) {
           const text = typeof res.getText === 'function' ? res.getText() : String(res)
-          setResult(text)
-          console.log(setResult)
+          setPlaca(text)
           stopCamera()
+          fetchDatosPorPlaca(text)
           return
         }
 
@@ -120,7 +201,7 @@ export default function Camara() {
                 Desactivar
               </button>
             ) : (
-              <button className="btn" onClick={startCamera} type="button">
+              <button className="btn" onClick={onNuevo} type="button">
                 Nuevo
               </button>
             )}
@@ -128,9 +209,11 @@ export default function Camara() {
         </div>
 
         <div className="scannerPanelBody">
-          <div className="scannerValue">{result ? result : 'Sin lecturas aún'}</div>
-          <div className="scannerValue">{result ? 'direccion: 5118 Naranjal 1' : ''}</div>
-          <div className="scannerValue">{result ? 'Empresa: Autoland' : ''}</div>
+          <div className="scannerValue">{placa ? placa : 'Sin lecturas aún'}</div>
+          {loading ? <div className="scannerValue">Consultando...</div> : null}
+          {direccion ? <div className="scannerValue">Dirección: {direccion}</div> : null}
+          {empresa ? <div className="scannerValue">Empresa: {empresa}</div> : null}
+          {apiError ? <div className="error">{apiError}</div> : null}
         </div>
       </div>
     </div>
