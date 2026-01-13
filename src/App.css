@@ -1,0 +1,323 @@
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 16px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.75;
+  font-size: 14px;
+}
+
+.content {
+  flex: 1;
+  display: grid;
+  grid-template-rows: minmax(320px, 1fr) auto;
+  gap: 12px;
+  padding: 12px 16px 16px;
+}
+
+.cameraPanel {
+  min-height: 320px;
+}
+
+.cameraFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cameraOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0) 35%,
+    rgba(0, 0, 0, 0) 65%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+.scannerGuide {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.scannerGuideBox {
+  width: min(84%, 520px);
+  height: 96px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 0 0 999px rgba(0, 0, 0, 0.35),
+    0 0 0 2px rgba(0, 0, 0, 0.2) inset;
+}
+
+.scannerGuideLine {
+  position: absolute;
+  width: min(84%, 520px);
+  height: 2px;
+  background: rgba(255, 100, 100, 0.9);
+  box-shadow: 0 0 18px rgba(100, 108, 255, 0.45);
+}
+
+.cameraPlaceholder {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.cameraPlaceholderInner {
+  text-align: center;
+  max-width: 420px;
+}
+
+.cameraPlaceholderTitle {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.cameraPlaceholderText {
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.resultPanel {
+  width: 100%;
+}
+
+.resultCard {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.resultHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.resultTitle {
+  font-weight: 700;
+}
+
+.resultActions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  border-radius: 12px;
+  padding: 0.55em 1em;
+}
+
+.resultBody {
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.resultValue {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  word-break: break-word;
+}
+
+.error {
+  color: #ffb4b4;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 0, 0, 0.12);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  word-break: break-word;
+}
+
+.hint {
+  opacity: 0.75;
+  font-size: 12px;
+}
+
+.scanner {
+  min-height: 80vh;
+  display: grid;
+  grid-template-rows: auto auto;
+  padding: 12px 16px 16px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.scannerCamera {
+  position: relative;
+  width: 100%;
+  height: clamp(240px, 45vh, 420px);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.scannerVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.scannerPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+.scannerPlaceholderTitle {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.scannerPlaceholderText {
+  opacity: 0.8;
+  font-size: 14px;
+  text-align: center;
+}
+
+.scannerPanel {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.scannerPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.scannerPanelTitle {
+  font-weight: 800;
+}
+
+.scannerPanelActions {
+  display: flex;
+  gap: 8px;
+}
+
+.scannerPanelBody {
+  padding: 12px;
+  display: grid;
+}
+
+.scannerValue {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  word-break: break-word;
+}
+
+@media (min-width: 900px) {
+  .content {
+    max-width: 980px;
+    width: 100%;
+    margin: 0 auto;
+    grid-template-columns: minmax(560px, 1fr) 360px;
+    grid-template-rows: 1fr;
+    align-items: start;
+  }
+
+  .cameraFrame,
+  .cameraPlaceholder {
+    aspect-ratio: 16 / 10;
+    min-height: 520px;
+  }
+
+  .cameraPanel {
+    min-height: 520px;
+  }
+
+  .resultPanel {
+    position: sticky;
+    top: 16px;
+  }
+
+  .scanner {
+    grid-template-columns: minmax(560px, 1fr) 360px;
+    grid-template-rows: 1fr;
+    align-items: start;
+    gap: 10px;
+  }
+
+  .scannerCamera {
+    height: clamp(320px, 56vh, 520px);
+  }
+
+  .scannerPanel {
+    position: sticky;
+    top: 5px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .content {
+    max-width: 1180px;
+    grid-template-columns: minmax(720px, 1fr) 400px;
+  }
+}
