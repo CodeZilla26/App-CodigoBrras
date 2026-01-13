@@ -73,6 +73,7 @@ export default function Camara() {
         if (res) {
           const text = typeof res.getText === 'function' ? res.getText() : String(res)
           setResult(text)
+          console.log(setResult)
           stopCamera()
           return
         }
@@ -128,7 +129,8 @@ export default function Camara() {
 
         <div className="scannerPanelBody">
           <div className="scannerValue">{result ? result : 'Sin lecturas aún'}</div>
-          
+          <div className="scannerValue">{result ? 'direccion: 5118 Naranjal 1' : ''}</div>
+          <div className="scannerValue">{result ? 'Empresa: Autoland' : ''}</div>
         </div>
       </div>
     </div>
