@@ -79,7 +79,15 @@ export default function Camara() {
       })
 
       if (!resp.ok) {
-        throw new Error(`HTTP ${resp.status}`)
+        let details = ''
+        try {
+          details = await resp.text()
+        } catch {
+          details = ''
+        }
+
+        const shortDetails = details ? ` - ${details.slice(0, 200)}` : ''
+        throw new Error(`${endpoint} -> HTTP ${resp.status} ${resp.statusText}${shortDetails}`)
       }
 
       const json = await resp.json()
