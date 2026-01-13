@@ -1,12 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), basicSsl()],
-  server: {
-    host: true,
-    https: true,
-  },
+export default defineConfig(async ({ command }) => {
+  const plugins = [react()]
+
+  if (command === 'serve') {
+    const { default: basicSsl } = await import('@vitejs/plugin-basic-ssl')
+    plugins.push(basicSsl())
+  }
+
+  return {
+    plugins,
+    server: {
+      host: true,
+      https: command === 'serve',
+    },
+  }
 })
